@@ -1,641 +1,241 @@
 /* ===========================================
-   STARTUP VALIDATOR AI
-   Data File
+   Startup Validator AI
+   data.js
+   Version 2.0
 =========================================== */
 
-/* ========= Industries ========= */
+/* ---------- Industries ---------- */
 
-const industries = [
-
-"Artificial Intelligence",
-"EdTech",
-"HealthTech",
-"FinTech",
-"Cybersecurity",
-"SaaS",
-"E-Commerce",
-"Agritech",
-"FoodTech",
-"TravelTech",
-"Fitness",
-"Gaming",
-"Social Media",
-"Productivity",
-"Marketplace",
-"Real Estate",
-"Logistics",
-"IoT",
-"Blockchain",
-"ClimateTech"
-
+const INDUSTRIES = [
+  "Artificial Intelligence",
+  "EdTech",
+  "HealthTech",
+  "FinTech",
+  "Cybersecurity",
+  "SaaS",
+  "E-Commerce",
+  "Agritech",
+  "Travel",
+  "FoodTech",
+  "Productivity",
+  "Fitness",
+  "Gaming",
+  "Social Media",
+  "Real Estate",
+  "Logistics",
+  "Education",
+  "Marketplace",
+  "IoT",
+  "Blockchain"
 ];
 
+/* ---------- Revenue Models ---------- */
 
-/* ========= Startup Stages ========= */
-
-const startupStages = [
-
-"Idea Stage",
-
-"Research Stage",
-
-"MVP Stage",
-
-"Beta Launch",
-
-"Early Revenue",
-
-"Growth Stage",
-
-"Scaling"
-
+const REVENUE_MODELS = [
+  {
+    name:"Subscription",
+    description:"Charge customers monthly or yearly for premium features."
+  },
+  {
+    name:"Freemium",
+    description:"Offer basic features free and premium upgrades."
+  },
+  {
+    name:"Marketplace Commission",
+    description:"Earn a commission from every transaction."
+  },
+  {
+    name:"Advertising",
+    description:"Generate revenue through advertisements."
+  },
+  {
+    name:"One-Time Purchase",
+    description:"Users pay once for lifetime access."
+  },
+  {
+    name:"Enterprise Licensing",
+    description:"Sell business plans to companies."
+  },
+  {
+    name:"Affiliate Marketing",
+    description:"Earn commission by recommending products."
+  },
+  {
+    name:"Usage Based",
+    description:"Customers pay according to usage."
+  }
 ];
 
-
-/* ========= Revenue Models ========= */
-
-const revenueModels = [
-
-"Subscription",
-
-"Freemium",
-
-"Marketplace Commission",
-
-"One-Time Purchase",
-
-"Advertising",
-
-"Affiliate Marketing",
-
-"B2B Licensing",
-
-"Enterprise SaaS",
-
-"Usage-Based Pricing",
-
-"Premium Membership"
-
-];
-
-
-/* ========= Customer Types ========= */
-
-const customerSegments = [
-
-"Students",
-
-"Teachers",
-
-"Parents",
-
-"Developers",
-
-"Startups",
-
-"Small Businesses",
-
-"Enterprises",
-
-"Hospitals",
-
-"Doctors",
-
-"Freelancers",
-
-"Content Creators",
-
-"Gamers",
-
-"Travelers",
-
-"Fitness Enthusiasts",
-
-"General Consumers"
-
-];
-
-
-/* ========= Investment Levels ========= */
-
-const fundingLevels = [
-
-"Bootstrapped",
-
-"Friends & Family",
-
-"Angel Investment",
-
-"Seed Funding",
-
-"Series A",
-
-"Series B",
-
-"Series C"
-
-];
-
-
-/* ========= Business Categories ========= */
-
-const businessCategories = [
-
-"B2B",
-
-"B2C",
-
-"C2C",
-
-"D2C",
-
-"Marketplace",
-
-"SaaS",
-
-"Mobile App",
-
-"Website",
-
-"Offline + Online"
-
-];
-/* ===========================================
-   SWOT DATABASE
-=========================================== */
-
-const strengths = [
-
-"Solves a real-world problem",
-
-"Unique value proposition",
-
-"Large target audience",
-
-"Easy to use",
-
-"Scalable business model",
-
-"Low operational cost",
-
+/* ---------- SWOT ---------- */
+
+const SWOT = {
+
+strengths:[
+"Strong value proposition",
+"Simple user experience",
+"Scalable technology",
+"Growing digital demand",
 "Recurring revenue potential",
-
-"Strong branding opportunity",
-
-"High customer retention possibility",
-
-"Technology-driven solution",
-
-"Mobile-friendly platform",
-
-"Cloud-ready architecture",
-
+"Low operational cost",
+"Modern technology stack",
 "Fast MVP development",
-
-"Strong community building potential",
-
-"Global expansion opportunity"
-
-];
-
-const weaknesses = [
-
-"High competition",
-
-"Limited initial funding",
-
-"Customer acquisition can be expensive",
-
-"Requires continuous improvements",
-
-"Dependent on user trust",
-
-"Limited brand awareness",
-
-"Marketing challenges",
-
-"Small founding team",
-
-"Need for frequent feature updates",
-
-"Potential scalability issues"
-
-];
-
-const opportunities = [
-
-"Growing digital adoption",
-
-"International market expansion",
-
-"AI integration possibilities",
-
-"Strategic partnerships",
-
-"Government startup support",
-
-"Increasing smartphone users",
-
-"Growing online businesses",
-
-"Emerging technology trends",
-
-"Enterprise adoption",
-
-"Subscription economy growth"
-
-];
-
-const threats = [
-
-"Strong competitors",
-
-"Economic slowdown",
-
-"Changing customer behavior",
-
-"Regulatory changes",
-
-"Cybersecurity risks",
-
-"Rapid technology changes",
-
-"Funding difficulties",
-
-"Market saturation",
-
-"Negative user reviews",
-
-"Platform dependency"
-
-];
-
-/* ===========================================
-   MVP FEATURES
-=========================================== */
-
-const mvpFeatures = [
-
-"Secure Login",
-
-"User Dashboard",
-
-"Profile Management",
-
-"Search Functionality",
-
-"Analytics Dashboard",
-
-"Notifications",
-
-"Dark Mode",
-
-"Export Reports",
-
-"Responsive Design",
-
-"Offline Support",
-
-"Favorites",
-
-"Settings",
-
-"Feedback Form",
-
-"Basic Admin Panel",
-
-"Help Center"
-
-];
-
-/* ===========================================
-   ROADMAP
-=========================================== */
-
-const roadmap = {
-
-day30:[
-
-"Validate the problem",
-
-"Research competitors",
-
-"Create wireframes",
-
-"Build MVP",
-
-"Launch landing page"
-
+"Easy global expansion",
+"High customer retention potential"
 ],
 
-day90:[
+weaknesses:[
+"Limited brand awareness",
+"Competitive market",
+"Requires marketing investment",
+"Small development team",
+"Customer acquisition challenges",
+"Needs continuous improvements",
+"Limited initial funding",
+"Product validation required",
+"Feature prioritization needed",
+"Early-stage uncertainty"
+],
 
-"Collect user feedback",
+opportunities:[
+"AI adoption is increasing",
+"International expansion",
+"Government startup support",
+"Strategic partnerships",
+"Rapid digital transformation",
+"Growing smartphone users",
+"Enterprise adoption",
+"Emerging markets",
+"Subscription economy growth",
+"Technology innovation"
+],
 
-"Improve UI/UX",
+threats:[
+"Strong competitors",
+"Changing regulations",
+"Economic slowdown",
+"Cybersecurity risks",
+"Rapid technology changes",
+"Funding difficulties",
+"Market saturation",
+"Changing customer expectations",
+"Privacy concerns",
+"Platform dependency"
+]
 
-"Add requested features",
+};
 
-"Increase active users",
+/* ---------- Startup Badges ---------- */
 
-"Optimize performance"
+const BADGES = [
 
+{
+min:0,
+max:39,
+name:"🌱 Beginner Idea"
+},
+
+{
+min:40,
+max:59,
+name:"🚀 Promising Startup"
+},
+
+{
+min:60,
+max:79,
+name:"⭐ High Potential"
+},
+
+{
+min:80,
+max:94,
+name:"💎 Investor Ready"
+},
+
+{
+min:95,
+max:100,
+name:"🦄 Unicorn Potential"
+}
+
+];
+
+/* ---------- Roadmap ---------- */
+
+const ROADMAP = {
+
+month1:[
+"Validate the problem",
+"Research competitors",
+"Identify target audience",
+"Build wireframes",
+"Develop MVP"
+],
+
+month3:[
+"Launch beta version",
+"Collect feedback",
+"Improve user experience",
+"Fix bugs",
+"Acquire first users"
 ],
 
 month6:[
-
-"Launch Version 2",
-
+"Release Version 2",
 "Start monetization",
-
-"Build marketing strategy",
-
-"Expand features",
-
-"Grow community"
-
+"Expand marketing",
+"Build community",
+"Improve scalability"
 ],
 
 year1:[
-
-"Scale globally",
-
-"Hire team",
-
+"Grow nationally",
+"Build a larger team",
 "Seek funding",
-
 "Launch mobile app",
-
-"Enterprise partnerships"
-
+"Expand internationally"
 ]
 
 };
 
-/* ===========================================
-   REVENUE SUGGESTIONS
-=========================================== */
+/* ---------- Investor Tips ---------- */
 
-const pricingStrategies=[
+const INVESTOR_TIPS = [
 
-"Freemium",
-
-"Monthly Subscription",
-
-"Annual Subscription",
-
-"One-Time Purchase",
-
-"Usage Based Pricing",
-
-"Commission Based",
-
-"Enterprise Plan",
-
-"Affiliate Revenue",
-
-"Advertisements",
-
-"Premium Features"
-
-];
-
-/* ===========================================
-   INVESTOR TIPS
-=========================================== */
-
-const investorTips=[
-
-"Clearly define the problem.",
-
-"Validate market demand.",
-
-"Build an MVP first.",
-
-"Track user growth.",
-
-"Show revenue potential.",
+"Validate your idea with real users.",
 
 "Keep customer acquisition cost low.",
 
-"Focus on retention.",
+"Focus on solving one important problem.",
 
-"Present realistic financial projections.",
+"Build an MVP before scaling.",
 
-"Demonstrate scalability.",
+"Track user retention.",
 
-"Highlight your competitive advantage."
+"Create a sustainable revenue model.",
 
-];
-/* ===========================================
-   BUSINESS MODEL CANVAS
-=========================================== */
+"Show measurable growth.",
 
-const businessModelCanvas = {
+"Keep your product simple.",
 
-keyPartners:[
-"Technology Partners",
-"Payment Providers",
-"Cloud Hosting",
-"Marketing Agencies",
-"Affiliate Partners"
-],
+"Understand your competitors.",
 
-keyActivities:[
-"Product Development",
-"Marketing",
-"Customer Support",
-"Research & Development",
-"User Testing"
-],
-
-keyResources:[
-"Development Team",
-"Technology Stack",
-"Brand Identity",
-"Community",
-"Customer Data"
-],
-
-valueProposition:[
-"Solve a real-world problem",
-"Simple user experience",
-"Affordable pricing",
-"Fast performance",
-"Innovative solution"
-],
-
-customerRelationships:[
-"Email Support",
-"Community Building",
-"Help Center",
-"Social Media",
-"Live Chat"
-],
-
-channels:[
-"Website",
-"Mobile App",
-"Social Media",
-"SEO",
-"Email Marketing"
-],
-
-customerSegments:[
-"Students",
-"Professionals",
-"Startups",
-"Businesses",
-"Enterprises"
-],
-
-costStructure:[
-"Development",
-"Marketing",
-"Hosting",
-"Maintenance",
-"Customer Support"
-],
-
-revenueStreams:[
-"Subscriptions",
-"Freemium",
-"Advertising",
-"Affiliate",
-"Enterprise Plans"
-]
-
-};
-
-/* ===========================================
-   ELEVATOR PITCH TEMPLATES
-=========================================== */
-
-const pitchTemplates=[
-
-"Our startup helps {AUDIENCE} solve {PROBLEM} using {SOLUTION}.",
-
-"We are building an innovative {CATEGORY} platform that simplifies {PROBLEM}.",
-
-"Our mission is to make {INDUSTRY} more accessible through technology.",
-
-"We empower {AUDIENCE} with a smarter way to {SOLUTION}.",
-
-"Our product transforms the way people experience {INDUSTRY}."
+"Iterate using customer feedback."
 
 ];
 
-/* ===========================================
-   LAUNCH CHECKLIST
-=========================================== */
+/* ---------- Elevator Pitch Templates ---------- */
 
-const launchChecklist=[
+const PITCHES = [
 
-"Validate the startup idea",
+"Our startup helps {AUDIENCE} solve {PROBLEM} through an innovative {INDUSTRY} platform.",
 
-"Research competitors",
+"We are building a scalable {INDUSTRY} solution focused on making {PROBLEM} easier.",
 
-"Identify target audience",
+"Our mission is to transform the {INDUSTRY} industry by helping {AUDIENCE}.",
 
-"Build MVP",
+"We empower {AUDIENCE} with smarter technology that solves {PROBLEM}.",
 
-"Design Landing Page",
-
-"Create Logo & Branding",
-
-"Test on Mobile",
-
-"Collect Feedback",
-
-"Fix Critical Bugs",
-
-"Launch Public Beta",
-
-"Share on LinkedIn",
-
-"Upload on GitHub",
-
-"Create Product Demo",
-
-"Prepare Pitch Deck",
-
-"Track User Feedback"
+"We believe technology can simplify {PROBLEM} for millions of users."
 
 ];
-
-/* ===========================================
-   RISK MATRIX
-=========================================== */
-
-const riskMatrix={
-
-Low:[
-"Small initial audience",
-"Brand awareness",
-"Minor UI improvements"
-],
-
-Medium:[
-"Competition",
-"Customer acquisition",
-"Marketing budget"
-],
-
-High:[
-"Funding issues",
-"Market changes",
-"Technical scalability",
-"Legal compliance"
-]
-
-};
-
-/* ===========================================
-   STARTUP SCORE LABELS
-=========================================== */
-
-const scoreLabels=[
-
-{min:0,max:20,label:"Idea Needs Improvement"},
-
-{min:21,max:40,label:"Early Stage Potential"},
-
-{min:41,max:60,label:"Promising Startup"},
-
-{min:61,max:80,label:"High Growth Potential"},
-
-{min:81,max:100,label:"Investor Ready"}
-
-];
-
-/* ===========================================
-   INDUSTRY TIPS
-=========================================== */
-
-const industryTips={
-
-"Artificial Intelligence":"Focus on solving one specific problem before expanding.",
-
-"EdTech":"Improve engagement with interactive learning.",
-
-"HealthTech":"Prioritize privacy, security, and medical compliance.",
-
-"FinTech":"Build trust through transparency and security.",
-
-"E-Commerce":"Optimize user experience and fast checkout.",
-
-"SaaS":"Focus on recurring value and customer retention.",
-
-"Cybersecurity":"Build reliability and strong data protection.",
-
-"Marketplace":"Balance buyer and seller growth.",
-
-"Gaming":"Create engaging gameplay and community features.",
-
-"Productivity":"Save users time through automation."
-
-};
-
-/* ===========================================
-   END OF DATA FILE
-=========================================== */
