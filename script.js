@@ -1,196 +1,385 @@
 /* ===========================================
    STARTUP VALIDATOR AI
    script.js
+   Version 2.0
 =========================================== */
 
-// =======================
-// DOM Elements
-// =======================
+// ---------- DOM Elements ----------
 
-const startupForm = document.getElementById("startupForm");
+const form = document.getElementById("startupForm");
 
 const startupName = document.getElementById("startupName");
-
 const industry = document.getElementById("industry");
-
+const audience = document.getElementById("audience");
 const problem = document.getElementById("problem");
 
-const audience = document.getElementById("audience");
-
-const scoreValue = document.getElementById("startupScore");
-
-const innovationValue = document.getElementById("innovationScore");
-
-const scalabilityValue = document.getElementById("scalabilityScore");
-
-const investorValue = document.getElementById("investorScore");
-
-const swotContainer = document.getElementById("swotContainer");
-
-const roadmapContainer = document.getElementById("roadmapContainer");
-
-const pitchContainer = document.getElementById("pitchContainer");
+const startupScore = document.getElementById("startupScore");
+const innovationScore = document.getElementById("innovationScore");
+const scalabilityScore = document.getElementById("scalabilityScore");
+const investorScore = document.getElementById("investorScore");
 
 const revenueContainer = document.getElementById("revenueContainer");
+const swotContainer = document.getElementById("swotContainer");
+const roadmapContainer = document.getElementById("roadmapContainer");
+const pitchContainer = document.getElementById("pitchContainer");
 
+// Progress Rings
 
-// =======================
-// Populate Dropdown
-// =======================
+const ringStartup = document.getElementById("ringStartup");
+const ringInnovation = document.getElementById("ringInnovation");
+const ringScale = document.getElementById("ringScale");
+const ringInvestor = document.getElementById("ringInvestor");
 
-window.addEventListener("load",()=>{
+// Chart
 
-industries.forEach(item=>{
+let startupChart = null;
 
-const option=document.createElement("option");
+// ---------- Initialize ----------
 
-option.value=item;
+document.addEventListener("DOMContentLoaded", () => {
 
-option.textContent=item;
+loadIndustries();
+
+loadTheme();
+
+loadHistory();
+
+});
+
+// ---------- Load Industries ----------
+
+function loadIndustries() {
+
+industry.innerHTML =
+'<option value="">Select Industry</option>';
+
+INDUSTRIES.forEach(item => {
+
+const option = document.createElement("option");
+
+option.value = item;
+
+option.textContent = item;
 
 industry.appendChild(option);
 
 });
 
-});
+}
 
+// ---------- Random Utility ----------
 
-// =======================
-// Random Helper
-// =======================
+function randomItem(array){
 
-function random(arr){
-
-return arr[Math.floor(Math.random()*arr.length)];
+return array[Math.floor(Math.random()*array.length)];
 
 }
 
+// ---------- Average ----------
 
-// =======================
-// Generate Score
-// =======================
+function average(...numbers){
 
-function randomScore(min,max){
+const total=numbers.reduce((a,b)=>a+b,0);
 
-return Math.floor(Math.random()*(max-min+1))+min;
+return Math.round(total/numbers.length);
 
 }
 
+// ---------- Clamp ----------
 
-// =======================
-// Startup Evaluation
-// =======================
+function clamp(value,min,max){
+
+return Math.max(min,Math.min(max,value));
+
+}
+
+// ---------- Badge ----------
+
+function getBadge(score){
+
+return BADGES.find(item=>
+
+score>=item.min && score<=item.max
+
+).name;
+
+}
+
+// ---------- Theme ----------
+
+function loadTheme(){
+
+const theme=
+
+localStorage.getItem("theme");
+
+if(theme==="light"){
+
+document.body.classList.add("light");
+
+}
+
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle("light");
+
+localStorage.setItem(
+
+"theme",
+
+document.body.classList.contains("light")
+
+? "light"
+
+: "dark"
+
+);
+
+}
+
+// ---------- Reset ----------
+
+function resetForm(){
+
+form.reset();
+
+startupScore.textContent="0%";
+
+innovationScore.textContent="0%";
+
+scalabilityScore.textContent="0%";
+
+investorScore.textContent="0%";
+
+ringStartup.textContent="0%";
+
+ringInnovation.textContent="0%";
+
+ringScale.textContent="0%";
+
+ringInvestor.textContent="0%";
+
+revenueContainer.innerHTML="";
+
+swotContainer.innerHTML="";
+
+roadmapContainer.innerHTML="";
+
+pitchContainer.innerHTML="";
+
+if(startupChart){
+
+startupChart.destroy();
+
+startupChart=null;
+
+}
+
+}
+
+// ---------- Local Storage ----------
+
+function loadHistory(){
+
+if(!localStorage.getItem("startupHistory")){
+
+localStorage.setItem(
+
+"startupHistory",
+
+JSON.stringify([])
+
+);
+
+}
+
+}
+/* ===========================================
+   STARTUP SCORING ENGINE
+=========================================== */
 
 function evaluateStartup(){
 
-const name=startupName.value.trim();
-
-const prob=problem.value.trim();
-
-const ind=industry.value;
-
-const aud=audience.value.trim();
+const name = startupName.value.trim();
+const selectedIndustry = industry.value;
+const targetAudience = audience.value.trim();
+const problemStatement = problem.value.trim();
 
 if(
-
-name===""
-
-||
-
-prob===""
-
-||
-
-ind===""
-
-||
-
-aud===""
-
+!name ||
+!selectedIndustry ||
+!targetAudience ||
+!problemStatement
 ){
 
-alert("Please fill all required fields.");
+alert("Please fill all fields.");
 
 return;
 
 }
 
+let startup = 35;
+let innovation = 30;
+let scalability = 30;
+let investor = 30;
 
-// Base Scores
+/* =============================
+   Startup Name
+============================= */
 
-let startupScore=randomScore(70,98);
+if(name.length>=5){
 
-let innovation=randomScore(65,99);
+startup+=5;
 
-let scalability=randomScore(60,98);
-
-let investor=randomScore(55,95);
-
-
-// Smart Adjustments
-
-if(prob.length>120){
-
-startupScore+=2;
-
-innovation+=2;
+innovation+=4;
 
 }
 
-if(ind==="Artificial Intelligence"){
+if(name.length>=10){
+
+startup+=3;
+
+}
+
+/* =============================
+   Problem Statement
+============================= */
+
+const words = problemStatement.split(/\s+/).length;
+
+if(words>20){
+
+startup+=10;
+
+innovation+=10;
+
+}
+
+if(words>40){
+
+startup+=5;
+
+investor+=5;
+
+}
+
+const lowerProblem = problemStatement.toLowerCase();
+
+const keywords=[
+"ai",
+"automation",
+"security",
+"health",
+"education",
+"student",
+"finance",
+"travel",
+"cloud",
+"productivity",
+"sustainability",
+"marketplace"
+];
+
+keywords.forEach(word=>{
+
+if(lowerProblem.includes(word)){
 
 innovation+=3;
 
 }
 
-if(prob.toLowerCase().includes("ai")){
+});
 
-innovation+=2;
+/* =============================
+   Audience
+============================= */
+
+const audienceWords=targetAudience.split(/\s+/).length;
+
+if(audienceWords>=2){
+
+startup+=5;
 
 }
 
-if(aud.split(" ").length>3){
+if(audienceWords>=4){
 
-startupScore+=2;
+investor+=5;
 
 }
 
+/* =============================
+   Industry Scores
+============================= */
 
-// Limit Scores
+switch(selectedIndustry){
 
-startupScore=Math.min(startupScore,100);
+case "Artificial Intelligence":
 
-innovation=Math.min(innovation,100);
+innovation+=18;
+investor+=10;
+break;
 
-scalability=Math.min(scalability,100);
+case "HealthTech":
 
-investor=Math.min(investor,100);
+innovation+=14;
+startup+=8;
+break;
 
+case "FinTech":
 
-// Update UI
+innovation+=12;
+investor+=8;
+break;
 
-scoreValue.textContent=startupScore+"%";
+case "SaaS":
 
-innovationValue.textContent=innovation+"%";
+startup+=10;
+scalability+=15;
+break;
 
-scalabilityValue.textContent=scalability+"%";
+case "Marketplace":
 
-investorValue.textContent=investor+"%";
+scalability+=15;
+startup+=10;
+break;
 
+case "EdTech":
 
-// Generate Everything
+startup+=8;
+innovation+=6;
+break;
 
-generateSWOT();
+default:
 
-generateRevenue();
+startup+=6;
+innovation+=6;
 
-generateRoadmap();
+}
 
-generatePitch();
+/* =============================
+   Final Adjustments
+============================= */
 
-drawChart(
+scalability=
 
-startupScore,
+average(
+
+startup,
+
+innovation,
+
+65
+
+);
+
+investor=
+
+average(
+
+startup,
 
 innovation,
 
@@ -200,83 +389,200 @@ investor
 
 );
 
-saveHistory();
+startup=
 
-  }
+clamp(startup,0,100);
+
+innovation=
+
+clamp(innovation,0,100);
+
+scalability=
+
+clamp(scalability,0,100);
+
+investor=
+
+clamp(investor,0,100);
+
+/* =============================
+   Update Dashboard
+============================= */
+
+startupScore.textContent=startup+"%";
+innovationScore.textContent=innovation+"%";
+scalabilityScore.textContent=scalability+"%";
+investorScore.textContent=investor+"%";
+
+ringStartup.textContent=startup+"%";
+ringInnovation.textContent=innovation+"%";
+ringScale.textContent=scalability+"%";
+ringInvestor.textContent=investor+"%";
+
+/* =============================
+   Generate Report
+============================= */
+
+generateRevenue(selectedIndustry);
+
+generateSWOT();
+
+generateRoadmap();
+
+generatePitch(
+selectedIndustry,
+targetAudience,
+problemStatement
+);
+
+drawChart(
+startup,
+innovation,
+scalability,
+investor
+);
+
+saveStartup({
+
+name,
+
+industry:selectedIndustry,
+
+audience:targetAudience,
+
+startup,
+
+innovation,
+
+scalability,
+
+investor,
+
+badge:getBadge(startup)
+
+});
+
+showBadge(getBadge(startup));
+
+}
+
 /* ===========================================
-   SWOT GENERATOR
+   GENERATE REVENUE
 =========================================== */
 
-function generateSWOT(){
+function generateRevenue(selectedIndustry){
 
-swotContainer.innerHTML="";
+revenueContainer.innerHTML="";
 
-const data=[
-{
-title:"Strengths",
-class:"strength",
-items:strengths
-},
-{
-title:"Weaknesses",
-class:"weakness",
-items:weaknesses
-},
-{
-title:"Opportunities",
-class:"opportunity",
-items:opportunities
-},
-{
-title:"Threats",
-class:"threat",
-items:threats
-}
+let recommendations=[...REVENUE_MODELS];
+
+if(selectedIndustry==="SaaS"){
+
+recommendations=[
+REVENUE_MODELS[0],
+REVENUE_MODELS[5],
+REVENUE_MODELS[7]
 ];
 
-data.forEach(section=>{
+}
 
-const box=document.createElement("div");
+else if(selectedIndustry==="Marketplace"){
 
-box.className=`box ${section.class}`;
+recommendations=[
+REVENUE_MODELS[2],
+REVENUE_MODELS[6],
+REVENUE_MODELS[3]
+];
 
-box.innerHTML=`
-<h2>${section.title}</h2>
-<ul>
-<li>${random(section.items)}</li>
-<li>${random(section.items)}</li>
-<li>${random(section.items)}</li>
-</ul>
+}
+
+else if(selectedIndustry==="EdTech"){
+
+recommendations=[
+REVENUE_MODELS[0],
+REVENUE_MODELS[1],
+REVENUE_MODELS[6]
+];
+
+}
+
+recommendations.forEach(model=>{
+
+const card=document.createElement("div");
+
+card.className="card";
+
+card.innerHTML=`
+
+<h3>${model.name}</h3>
+
+<p>${model.description}</p>
+
 `;
 
-swotContainer.appendChild(box);
+revenueContainer.appendChild(card);
 
 });
 
 }
 
 /* ===========================================
-   REVENUE MODEL
+   SWOT
 =========================================== */
 
-function generateRevenue(){
+function generateSWOT(){
 
-let html="";
+swotContainer.innerHTML="";
 
-for(let i=0;i<4;i++){
+const sections=[
 
-html+=`
-<div class="card">
-<h3>${revenueModels[i]}</h3>
-<p>
-Recommended revenue strategy for your startup.
-</p>
-</div>
-`;
+{
+title:"💪 Strengths",
+className:"strength",
+list:SWOT.strengths
+},
+
+{
+title:"⚠ Weaknesses",
+className:"weakness",
+list:SWOT.weaknesses
+},
+
+{
+title:"🚀 Opportunities",
+className:"opportunity",
+list:SWOT.opportunities
+},
+
+{
+title:"🛑 Threats",
+className:"threat",
+list:SWOT.threats
+}
+
+];
+
+sections.forEach(section=>{
+
+const card=document.createElement("div");
+
+card.className=`box ${section.className}`;
+
+let html=`<h2>${section.title}</h2><ul>`;
+
+for(let i=0;i<3;i++){
+
+html+=`<li>${randomItem(section.list)}</li>`;
 
 }
 
-revenueContainer.innerHTML=html;
+html+="</ul>";
+
+card.innerHTML=html;
+
+swotContainer.appendChild(card);
+
+});
 
 }
 
@@ -286,49 +592,75 @@ revenueContainer.innerHTML=html;
 
 function generateRoadmap(){
 
-roadmapContainer.innerHTML=`
+roadmapContainer.innerHTML="";
 
-<div class="step">
-<div class="circle">30</div>
-<div class="content">
-<h3>First 30 Days</h3>
-<ul>
-${roadmap.day30.map(x=>`<li>${x}</li>`).join("")}
-</ul>
-</div>
+const roadmapData=[
+
+{
+
+title:"Month 1",
+
+tasks:ROADMAP.month1
+
+},
+
+{
+
+title:"Month 3",
+
+tasks:ROADMAP.month3
+
+},
+
+{
+
+title:"Month 6",
+
+tasks:ROADMAP.month6
+
+},
+
+{
+
+title:"Year 1",
+
+tasks:ROADMAP.year1
+
+}
+
+];
+
+roadmapData.forEach((phase,index)=>{
+
+const step=document.createElement("div");
+
+step.className="step";
+
+step.innerHTML=`
+
+<div class="circle">
+
+${index+1}
+
 </div>
 
-<div class="step">
-<div class="circle">90</div>
 <div class="content">
-<h3>90 Days</h3>
-<ul>
-${roadmap.day90.map(x=>`<li>${x}</li>`).join("")}
-</ul>
-</div>
-</div>
 
-<div class="step">
-<div class="circle">6M</div>
-<div class="content">
-<h3>6 Months</h3>
-<ul>
-${roadmap.month6.map(x=>`<li>${x}</li>`).join("")}
-</ul>
-</div>
-</div>
+<h3>${phase.title}</h3>
 
-<div class="step">
-<div class="circle">1Y</div>
-<div class="content">
-<h3>1 Year</h3>
 <ul>
-${roadmap.year1.map(x=>`<li>${x}</li>`).join("")}
+
+${phase.tasks.map(task=>`<li>${task}</li>`).join("")}
+
 </ul>
-</div>
+
 </div>
 
 `;
+
+roadmapContainer.appendChild(step);
+
+});
 
 }
 
@@ -336,35 +668,32 @@ ${roadmap.year1.map(x=>`<li>${x}</li>`).join("")}
    ELEVATOR PITCH
 =========================================== */
 
-function generatePitch(){
+function generatePitch(
 
-const name=startupName.value;
+industry,
 
-const ind=industry.value;
+audience,
 
-const aud=audience.value;
+problem
 
-const text=random(pitchTemplates)
+){
 
-.replace("{AUDIENCE}",aud)
+let pitch=randomItem(PITCHES);
 
-.replace("{PROBLEM}","a real-world challenge")
-
-.replace("{SOLUTION}",name)
-
-.replace("{CATEGORY}",ind)
-
-.replace("{INDUSTRY}",ind);
+pitch=pitch
+.replace("{AUDIENCE}",audience)
+.replace("{INDUSTRY}",industry)
+.replace("{PROBLEM}",problem.toLowerCase());
 
 pitchContainer.innerHTML=`
 
 <div class="card">
 
-<h2>🚀 Elevator Pitch</h2>
+<h2>🎤 Elevator Pitch</h2>
 
 <p style="margin-top:20px;line-height:1.8;">
 
-${text}
+${pitch}
 
 </p>
 
@@ -373,15 +702,51 @@ ${text}
 `;
 
 }
+
+/* ===========================================
+   BADGE
+=========================================== */
+
+function showBadge(badge){
+
+const badgeCard=document.createElement("div");
+
+badgeCard.className="card";
+
+badgeCard.style.marginTop="30px";
+
+badgeCard.innerHTML=`
+
+<h2>🏆 Startup Rating</h2>
+
+<h1 style="margin-top:20px;">
+
+${badge}
+
+</h1>
+
+<p style="margin-top:15px;">
+
+Your startup has been evaluated using our rule-based validation engine.
+
+</p>
+
+`;
+
+pitchContainer.appendChild(badgeCard);
+
+}
 /* ===========================================
    CHART.JS
 =========================================== */
 
-let startupChart=null;
+function drawChart(startup, innovation, scalability, investor){
 
-function drawChart(startup,innovation,scalability,investor){
+const canvas=document.getElementById("chart");
 
-const ctx=document.getElementById("chart").getContext("2d");
+if(!canvas) return;
+
+const ctx=canvas.getContext("2d");
 
 if(startupChart){
 
@@ -405,9 +770,9 @@ labels:[
 
 "Investor",
 
-"Growth",
+"Market",
 
-"Market"
+"Growth"
 
 ],
 
@@ -425,9 +790,9 @@ scalability,
 
 investor,
 
-Math.floor((startup+innovation)/2),
+average(startup,innovation),
 
-Math.floor((startup+investor)/2)
+average(scalability,investor)
 
 ],
 
@@ -439,9 +804,9 @@ borderColor:"#6C63FF",
 
 pointBackgroundColor:"#00D4FF",
 
-pointRadius:5,
+borderWidth:3,
 
-borderWidth:3
+pointRadius:5
 
 }]
 
@@ -457,7 +822,7 @@ legend:{
 
 labels:{
 
-color:"#fff"
+color:getComputedStyle(document.body).color
 
 }
 
@@ -475,7 +840,17 @@ max:100,
 
 ticks:{
 
-color:"#fff"
+stepSize:20,
+
+backdropColor:"transparent",
+
+color:getComputedStyle(document.body).color
+
+},
+
+pointLabels:{
+
+color:getComputedStyle(document.body).color
 
 },
 
@@ -488,12 +863,6 @@ color:"rgba(255,255,255,.15)"
 angleLines:{
 
 color:"rgba(255,255,255,.15)"
-
-},
-
-pointLabels:{
-
-color:"#fff"
 
 }
 
@@ -508,10 +877,10 @@ color:"#fff"
 }
 
 /* ===========================================
-   SAVE HISTORY
+   SAVE STARTUP
 =========================================== */
 
-function saveHistory(){
+function saveStartup(data){
 
 const history=
 
@@ -523,17 +892,13 @@ localStorage.getItem("startupHistory")
 
 history.unshift({
 
-name:startupName.value,
-
-industry:industry.value,
-
-score:scoreValue.textContent,
+...data,
 
 date:new Date().toLocaleString()
 
 });
 
-if(history.length>10){
+if(history.length>15){
 
 history.pop();
 
@@ -571,27 +936,37 @@ return;
 
 }
 
-let text="Saved Startup Ideas\n\n";
+let report="===== Startup History =====\n\n";
 
 history.forEach((item,index)=>{
 
-text+=
+report+=
 
 `${index+1}. ${item.name}
 
 Industry : ${item.industry}
 
-Score : ${item.score}
+Audience : ${item.audience}
+
+Startup : ${item.startup}%
+
+Innovation : ${item.innovation}%
+
+Scalability : ${item.scalability}%
+
+Investor : ${item.investor}%
+
+Badge : ${item.badge}
 
 Date : ${item.date}
 
--------------------------
+----------------------------
 
 `;
 
 });
 
-alert(text);
+alert(report);
 
 }
 
@@ -601,9 +976,21 @@ alert(text);
 
 function downloadReport(){
 
-const report=`
+if(startupScore.textContent==="0%"){
 
-===== STARTUP VALIDATOR AI =====
+alert("Please evaluate a startup first.");
+
+return;
+
+}
+
+const report=
+
+`============================
+
+STARTUP VALIDATOR AI REPORT
+
+============================
 
 Startup :
 
@@ -613,31 +1000,41 @@ Industry :
 
 ${industry.value}
 
-Target Audience :
+Audience :
 
 ${audience.value}
 
+Problem :
+
+${problem.value}
+
 Startup Score :
 
-${scoreValue.textContent}
+${startupScore.textContent}
 
 Innovation :
 
-${innovationValue.textContent}
+${innovationScore.textContent}
 
 Scalability :
 
-${scalabilityValue.textContent}
+${scalabilityScore.textContent}
 
-Investor Readiness :
+Investor :
 
-${investorValue.textContent}
+${investorScore.textContent}
+
+Badge :
+
+${getBadge(parseInt(startupScore.textContent))}
 
 Generated using Startup Validator AI
 
 `;
 
-const blob=new Blob(
+const blob=
+
+new Blob(
 
 [report],
 
@@ -649,7 +1046,9 @@ type:"text/plain"
 
 );
 
-const link=document.createElement("a");
+const link=
+
+document.createElement("a");
 
 link.href=
 
@@ -657,56 +1056,30 @@ URL.createObjectURL(blob);
 
 link.download=
 
-`${startupName.value}-Report.txt`;
+`${startupName.value.replace(/\s+/g,"_")}_Report.txt`;
 
 link.click();
 
+URL.revokeObjectURL(link.href);
+
 }
 
 /* ===========================================
-   DARK MODE
+   FORM SUBMIT
 =========================================== */
 
-function toggleTheme(){
+if(form){
 
-document.body.classList.toggle("light");
+form.addEventListener("submit",function(e){
 
-}
+e.preventDefault();
 
-/* ===========================================
-   RESET
-=========================================== */
+evaluateStartup();
 
-function resetForm(){
-
-startupForm.reset();
-
-scoreValue.textContent="0%";
-
-innovationValue.textContent="0%";
-
-scalabilityValue.textContent="0%";
-
-investorValue.textContent="0%";
-
-swotContainer.innerHTML="";
-
-roadmapContainer.innerHTML="";
-
-pitchContainer.innerHTML="";
-
-revenueContainer.innerHTML="";
-
-if(startupChart){
-
-startupChart.destroy();
-
-startupChart=null;
-
-}
+});
 
 }
 
 /* ===========================================
-   END OF SCRIPT
+   END OF FILE
 =========================================== */
