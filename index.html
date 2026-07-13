@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Startup Validator AI</title>
+
+<meta name="description"
+content="Validate your startup idea using AI-inspired business analysis.">
+
+<link rel="icon"
+href="assets/favicon.png">
+
+<link rel="stylesheet"
+href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ===========================
+NAVBAR
+=========================== -->
+
+<nav>
+
+<div class="logo">
+
+🚀 Startup Validator AI
+
+</div>
+
+<ul>
+
+<li><a href="#home">Home</a></li>
+
+<li><a href="#analyze">Analyze</a></li>
+
+<li><a href="#dashboard">Dashboard</a></li>
+
+<li><a href="#roadmap">Roadmap</a></li>
+
+</ul>
+
+</nav>
+
+<!-- ===========================
+HERO
+=========================== -->
+
+<section
+class="hero"
+id="home">
+
+<div>
+
+<h1>
+
+Validate Your
+
+<span>Startup Idea</span>
+
+Like A Founder 🚀
+
+</h1>
+
+<p>
+
+An AI-inspired platform that helps founders analyze startup ideas,
+evaluate business potential,
+generate SWOT analysis,
+recommend revenue models,
+create MVP roadmaps,
+and measure investor readiness —
+all directly in your browser.
+
+</p>
+
+<a href="#analyze"
+class="btn">
+
+Start Validation →
+
+</a>
+
+</div>
+
+<div>
+
+<img
+
+src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=900"
+
+style="width:100%;
+border-radius:25px;">
+
+</div>
+
+</section>
+
+<!-- ===========================
+FORM
+=========================== -->
+
+<section id="analyze">
+
+<div class="card">
+
+<h2>
+
+💡 Startup Information
+
+</h2>
+
+<form id="startupForm">
+
+<label>
+
+Startup Name
+
+</label>
+
+<input
+
+id="startupName"
+
+placeholder="Example : MediLens AI"
+
+required>
+
+<label>
+
+Industry
+
+</label>
+
+<select id="industry">
+
+<option value="">
+
+Select Industry
+
+</option>
+
+</select>
+
+<label>
+
+Target Audience
+
+</label>
+
+<input
+
+id="audience"
+
+placeholder="Students, Doctors, Businesses..."
+
+required>
+
+<label>
+
+Problem Statement
+
+</label>
+
+<textarea
+
+id="problem"
+
+placeholder="Describe the problem your startup solves..."
+
+required>
+
+</textarea>
+
+<button
+type="button"
+onclick="evaluateStartup()">
+
+🚀 Validate Startup
+
+</button>
+
+<button
+type="button"
+class="secondary"
+onclick="resetForm()">
+
+Reset
+
+</button>
+
+</form>
+
+</div>
+
+</section>
+<!-- ===========================
+DASHBOARD
+=========================== -->
+
+<section id="dashboard">
+
+<div class="dashboard">
+
+<div class="stat">
+
+<h3>Startup Score</h3>
+
+<h1 id="startupScore">0%</h1>
+
+</div>
+
+<div class="stat">
+
+<h3>Innovation</h3>
+
+<h1 id="innovationScore">0%</h1>
+
+</div>
+
+<div class="stat">
+
+<h3>Scalability</h3>
+
+<h1 id="scalabilityScore">0%</h1>
+
+</div>
+
+<div class="stat">
+
+<h3>Investor Readiness</h3>
+
+<h1 id="investorScore">0%</h1>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===========================
+PROGRESS RINGS
+=========================== -->
+
+<section class="progress-grid">
+
+<div class="progress-card">
+
+<div class="progress-ring">
+
+<span id="ringStartup">
+
+0%
+
+</span>
+
+</div>
+
+<h3 style="margin-top:20px;">
+
+Overall Startup Score
+
+</h3>
+
+</div>
+
+<div class="progress-card">
+
+<div class="progress-ring">
+
+<span id="ringInnovation">
+
+0%
+
+</span>
+
+</div>
+
+<h3 style="margin-top:20px;">
+
+Innovation
+
+</h3>
+
+</div>
+
+<div class="progress-card">
+
+<div class="progress-ring">
+
+<span id="ringScale">
+
+0%
+
+</span>
+
+</div>
+
+<h3 style="margin-top:20px;">
+
+Scalability
+
+</h3>
+
+</div>
+
+<div class="progress-card">
+
+<div class="progress-ring">
+
+<span id="ringInvestor">
+
+0%
+
+</span>
+
+</div>
+
+<h3 style="margin-top:20px;">
+
+Investor Readiness
+
+</h3>
+
+</div>
+
+</section>
+
+<!-- ===========================
+RADAR CHART
+=========================== -->
+
+<section>
+
+<div class="chart-card">
+
+<h2>
+
+📊 Startup Dashboard
+
+</h2>
+
+<canvas id="chart"></canvas>
+
+</div>
+
+</section>
+
+<!-- ===========================
+REVENUE MODELS
+=========================== -->
+
+<section>
+
+<div class="card">
+
+<h2>
+
+💰 Recommended Revenue Models
+
+</h2>
+
+<div
+
+id="revenueContainer"
+
+class="dashboard">
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===========================
+SWOT
+=========================== -->
+
+<section>
+
+<div class="card">
+
+<h2>
+
+📋 SWOT Analysis
+
+</h2>
+
+<div
+
+id="swotContainer"
+
+class="swot">
+
+</div>
+
+</div>
+
+</section>
+<!-- ===========================
+ROADMAP
+=========================== -->
+
+<section id="roadmap">
+
+<div class="card">
+
+<h2>
+
+🗺 Startup Growth Roadmap
+
+</h2>
+
+<div id="roadmapContainer"
+
+class="timeline">
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===========================
+ELEVATOR PITCH
+=========================== -->
+
+<section>
+
+<div id="pitchContainer">
+
+<div class="card">
+
+<h2>
+
+🎤 Elevator Pitch
+
+</h2>
+
+<p>
+
+Generate a startup analysis to create your personalized investor pitch.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ===========================
+ACTION BUTTONS
+=========================== -->
+
+<section>
+
+<div class="dashboard">
+
+<button onclick="downloadReport()">
+
+📥 Download Report
+
+</button>
+
+<button onclick="viewHistory()">
+
+📜 View History
+
+</button>
+
+<button onclick="toggleTheme()">
+
+🌙 Toggle Theme
+
+</button>
+
+<button onclick="resetForm()">
+
+🔄 Reset
+
+</button>
+
+</div>
+
+</section>
+
+<!-- ===========================
+FOOTER
+=========================== -->
+
+<footer>
+
+<h2>
+
+🚀 Startup Validator AI
+
+</h2>
+
+<p>
+
+Validate • Analyze • Improve • Launch
+
+</p>
+
+<br>
+
+<p>
+
+Built with ❤️ using HTML, CSS & JavaScript
+
+</p>
+
+<p>
+
+No Backend • No API • GitHub Pages Ready
+
+</p>
+
+<br>
+
+<p>
+
+© 2026 Siddhi Hiran
+
+</p>
+
+</footer>
+
+</div>
+
+<!-- ===========================
+SCRIPTS
+=========================== -->
+
+<script src="data.js"></script>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
